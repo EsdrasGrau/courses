@@ -96,16 +96,29 @@ Ask the user for two integers between 1 and 20. If they are both greater than
 neither are greater than 15 return zero
 '''
 
-num1 = int(input('Please, input a number between 1 and 20: >>>'))
-num2 = int(input('Please, input a second number between 1 and 20: >>>'))
+# num1 = int(input('Please, input a number between 1 and 20: >>>'))
+# num2 = int(input('Please, input a second number between 1 and 20: >>>'))
 
-if num1 >= 15 and num2 >= 15:
-    print(num1 * num2)
-elif num1 >= 15 or num2 >= 15:
-    print(num1 + num2)
-else:
-    print(0)
+# if num1 >= 15 and num2 >= 15:
+#     print(num1 * num2)
+# elif num1 >= 15 or num2 >= 15:
+#     print(num1 + num2)
+# else:
+#     print(0)
+    
 
+'''
+Question 6
+Ask the user for two integers, then swap the contents of the variables. So if
+var_1 = 1 and var_2 = 2 initially, once the code has run var_1 should equal 2
+and var_2 should equal 1.
+'''
+
+num1 = int(input('Please, input a number: >>>'))
+num2 = int(input('Please, input a second number: >>>'))
+print('Before swapping num1 = ', num1, ' and num2 = ', num2)
+num1, num2 = num2, num1
+print('After swapping num1 = ', num1, ' and num2 = ', num2)
 
 
 
