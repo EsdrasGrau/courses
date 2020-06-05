@@ -41,7 +41,7 @@ lower number to the higher number. Print the results to the screen.
 #     reversedstr =   char + reversedstr
 # print(reversedstr)
 
-# print(word[::-1]) 
+# #print(word[::-1]) 
 
 '''
 Question 3
@@ -141,25 +141,58 @@ two. Series starts 0 1 1 2 3 5 8 13 ....)
 # print(f'The first 20 Fibonacci numbers are, {fib(20)}')    
 
 
+# # Other solution
+# n = 20
 
-n = 20
+# # Set a and b to the first two numbers in the sequence
+# a = 0
+# b = 1 
 
-# Set a and b to the first two numbers in the sequence
-a = 0
-b = 1 
+# # List in which to store numbers
+# fib_nums = []
 
-# List in which to store numbers
-fib_nums = []
-
-# Use a for loop to create the sequence, repeat n times
-for i in range(n):
-    fib_nums.append(a)
-    a,b = b,a+b     
+# # Use a for loop to create the sequence, repeat n times
+# for i in range(n):
+#     fib_nums.append(a)
+#     a,b = b,a+b     
     
-print(f'The first {n} Fibonacci numbers are, {fib_nums}')
+# print(f'The first {n} Fibonacci numbers are, {fib_nums}')
 
 
 
+'''
+Question 9
+
+     *****
+     *
+     **** 
+     *
+     *
+     *
+Can you draw this using python? (comment the solution code)
+'''
+
+'''
+Question 10
+Write some code that will determine all odd and even numbers
+between 1 and 100. Put the odds in a list named odd and the evens
+in a list named even.
+'''
+
+
+n = 100
+
+evens = []
+odds = []
+
+for i in range(n + 1):
+    if i % 2 == 0:
+        evens.append(i)
+    else:
+        odds.append(i)
+print(f'The evens numbers are {evens}')
+print()
+print(f'The odds numbers are {odds}')
 
 
 
