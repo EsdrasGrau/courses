@@ -1,0 +1,6 @@
+def double_char(s):
+    phrase =[]
+    for char in s:
+        phrase.append(char*2)
+
+    return ''.join(phrase)
