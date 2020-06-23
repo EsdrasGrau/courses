@@ -171,3 +171,69 @@ SELECT (MAX(release_year) - MIN(release_year)) / 10 AS number_of_decades
 FROM films;
 
 -- Chapter 4
+SELECT name
+FROM people
+ORDER BY name;
+
+SELECT name
+FROM people
+ORDER BY birthdate;
+
+SELECT name, birthdate
+FROM people
+ORDER BY birthdate;
+
+SELECT title, release_year
+FROM films
+WHERE release_year IN (2000,2012)
+ORDER BY release_year;
+
+SELECT *
+FROM films
+WHERE release_year <> 2015
+ORDER BY duration;
+
+SELECT title, gross
+FROM films
+WHERE title LIKE 'M%'
+ORDER BY title;
+
+SELECT imdb_score, film_id
+FROM  reviews
+ORDER BY imdb_score DESC;
+
+SELECT title
+FROM films
+ORDER BY title DESC;
+
+SELECT title, duration
+FROM films
+ORDER BY duration DESC;
+
+SELECT birthdate, name
+FROM people
+ORDER BY birthdate, name;
+
+SELECT release_year, duration, title
+FROM films
+ORDER BY release_year, duration;
+
+SELECT certification, release_year, title
+FROM films
+ORDER BY certification, release_year;
+
+SELECT name, birthdate
+FROM people
+ORDER BY name, birthdate;
+
+SELECT release_year, COUNT(*)
+FROM films
+GROUP BY release_year;
+
+SELECT release_year, AVG(duration)
+FROM films
+GROUP BY release_year;
+
+SELECT release_year, MAX(budget)
+FROM films
+GROUP BY release_year;
