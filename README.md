@@ -16,6 +16,7 @@ This repository contains exercises and answers to the different courses I have b
 ## Platforms
 
 - [Codewars](https://www.codewars.com/users/EsdrasGrau)
+- [Datacamp](https://www.datacamp.com/)
 
 
 
