@@ -1,4 +1,4 @@
-# Continuous Education 
+# Continuous Education
 
 ## Overview
 
@@ -17,6 +17,7 @@ This repository contains exercises and answers to the different courses I have b
 
 - [Codewars](https://www.codewars.com/users/EsdrasGrau)
 - [Datacamp](https://www.datacamp.com/)
+  - SQL Fundamentals
 
 
 
@@ -28,9 +29,8 @@ This repository contains exercises and answers to the different courses I have b
 |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|
 | CODING FERRET     |
 |___________________|
-(\__/) || 
-(•ㅅ•) || 
+(\__/) ||
+(•ㅅ•) ||
 / 　 づ
-I'm a ferret, not a rabbit o(>ω<)o 
+I'm a ferret, not a rabbit o(>ω<)o
 ```
-
