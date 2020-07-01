@@ -611,4 +611,54 @@ WHERE life_expectancy >
       FROM countries)
   ORDER BY urbanarea_pop DESC;
 
-  
+  SELECT countries.name AS country,
+    (SELECT COUNT(*) AS cities_num
+     FROM cities
+     WHERE countries.code = cities.country_code) AS cities_num
+  FROM countries
+  ORDER BY cities_num DESC, country
+  LIMIT 9;
+
+  -- Select fields (with aliases)
+  SELECT code, COUNT(name) AS lang_num
+    -- From languages
+    FROM languages
+  -- Group by code
+  GROUP BY code;
+
+
+-- Select fields
+SELECT local_name, subquery.lang_num
+  -- From countries
+  FROM countries,
+  	-- Subquery (alias as subquery)
+  	(SELECT code, COUNT(*) AS lang_num
+   	 FROM languages
+  	 GROUP BY code) AS subquery
+  -- Where codes match
+  WHERE countries.code = subquery.code
+-- Order by descending number of languages
+ORDER BY lang_num DESC;
+
+-- Select fields
+SELECT name, continent, inflation_rate
+  -- From countries
+  FROM countries
+  	-- Join to economies
+  	INNER JOIN economies
+    -- Match on code
+    USING (code)
+-- Where year is 2015
+WHERE year = 2015;
+
+-- Select the maximum inflation rate as max_inf
+SELECT MAX(inflation_rate) as max_inf
+  -- Subquery using FROM (alias as subquery)
+  FROM (
+      SELECT name, continent, inflation_rate
+      FROM countries
+      INNER JOIN economies
+      USING (code)
+      WHERE year = 2015) AS subquery
+-- Group by continent
+GROUP BY continent;
