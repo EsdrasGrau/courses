@@ -578,3 +578,37 @@ SELECT name
 
 
 -- Chapter 4
+
+
+
+-- Select average life_expectancy
+SELECT AVG(life_expectancy)
+  -- From populations
+  FROM populations
+-- Where year is 2015
+WHERE year = 2015
+
+-- Select fields
+SELECT *
+  -- From populations
+  FROM populations
+-- Where life_expectancy is greater than
+WHERE life_expectancy >
+  -- 1.15 * subquery
+  1.15 * (SELECT AVG(life_expectancy)
+   FROM populations
+   WHERE year = 2015) AND
+  year = 2015;
+
+  -- 2. Select fields
+  SELECT name, country_code,urbanarea_pop
+    -- 3. From cities
+    FROM cities
+  -- 4. Where city name in the field of capital cities
+  WHERE cities.name IN
+    -- 1. Subquery
+    (SELECT capital
+      FROM countries)
+  ORDER BY urbanarea_pop DESC;
+
+  
