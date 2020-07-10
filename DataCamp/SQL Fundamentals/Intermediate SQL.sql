@@ -423,7 +423,7 @@ WHERE
 	-- Filter the main query using the subquery
 	s.avg_goals > (SELECT AVG(home_goal + away_goal)
                     FROM match WHERE season = '2012/2013');
-break
+
 
 
 -- Chapter 3
