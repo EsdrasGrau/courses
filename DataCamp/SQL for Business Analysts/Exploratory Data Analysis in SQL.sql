@@ -126,4 +126,45 @@ SELECT COUNT(*)
 
 
 
- 
+ -- Select average revenue per employee by sector
+SELECT sector,
+       AVG(revenues/employees::numeric) AS avg_rev_employee
+  FROM fortune500
+ GROUP BY sector
+ -- Use the column alias to order the results
+ ORDER BY avg_rev_employee;
+
+
+ -- Divide unanswered_count by question_count
+SELECT unanswered_count/question_count::numeric AS computed_pct,
+       -- What are you comparing the above quantity to?
+       unanswered_pct
+  FROM stackoverflow
+ -- Select rows where question_count is not 0
+ WHERE question_count > 0
+ LIMIT 10;
+
+
+
+ -- Select min, avg, max, and stddev of fortune500 profits
+SELECT MIN(profits),
+       AVG(profits),
+       MAX(profits),
+       STDDEV(profits)
+  FROM fortune500;
+
+
+
+
+-- Select sector and summary measures of fortune500 profits
+SELECT
+       sector,
+       MIN(profits),
+       AVG(profits),
+       MAX(profits),
+       STDDEV(profits)
+  FROM fortune500
+ -- What to group by?
+ GROUP BY sector
+ -- Order by the average profits
+ ORDER BY AVG;
