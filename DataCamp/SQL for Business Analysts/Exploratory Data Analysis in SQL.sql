@@ -168,3 +168,19 @@ SELECT
  GROUP BY sector
  -- Order by the average profits
  ORDER BY AVG;
+
+
+
+ -- Compute standard deviation of maximum values
+ SELECT stddev(maxval),
+ 	   -- min
+        MIN(maxval),
+        -- max
+        MAX(maxval),
+        -- avg
+        AVG(maxval)
+   -- Subquery to compute max of question_count by tag
+   FROM (SELECT MAX(question_count) AS maxval
+           FROM stackoverflow
+          -- Compute max by...
+          GROUP BY tag) AS max_results; -- alias for subquery
