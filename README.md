@@ -16,10 +16,17 @@ This repository contains exercises and answers to the different courses I have b
 ## Platforms
 
 - [Codewars](https://www.codewars.com/users/EsdrasGrau)
-- [SQLZoo](https://sqlzoo.net/)
-  - Musicians
+  - SQL (8kyu - 6kyu)
+  - Python (8kyu - 6kyu)
 - [Datacamp](https://www.datacamp.com/)
   - SQL Fundamentals
+  - SQL for Business Analysts
+  - Projects
+    - TV, Halftime Shows, and the Big Game
+- [Hackerrank](https://www.hackerrank.com/)
+  - SQL
+- [SQLZoo](https://sqlzoo.net/)
+  - Musicians
 
 ## Author
 
