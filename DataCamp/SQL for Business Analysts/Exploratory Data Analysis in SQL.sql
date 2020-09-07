@@ -282,3 +282,41 @@ SELECT sector,
  GROUP BY sector
  -- Order results by a value of interest
  ORDER BY mean;
+
+
+
+ -- What groups are you computing statistics by?
+ SELECT sector,
+        -- Select the mean of assets with the avg function
+        AVG(assets) AS mean,
+        -- Select the median
+        percentile_disc(0.5) WITHIN GROUP (ORDER BY assets) AS median
+   FROM fortune500
+  -- Computing statistics for each what?
+  GROUP BY sector
+  -- Order results by a value of interest
+  ORDER BY mean;
+
+
+
+ -- Code from previous step
+ DROP TABLE IF EXISTS profit80;
+
+ CREATE TEMP TABLE profit80 AS
+   SELECT sector,
+          percentile_disc(0.8) WITHIN GROUP (ORDER BY profits) AS pct80
+     FROM fortune500
+    GROUP BY sector;
+
+ -- Select columns, aliasing as needed
+ SELECT title, fortune500.sector,
+        profits, profits/pct80 AS ratio
+ -- What tables do you need to join?
+   FROM fortune500
+        LEFT JOIN profit80
+ -- How are the tables joined?
+        ON fortune500.sector = profit80.sector
+ -- What rows do you want to select?
+  WHERE profits > pct80;
+
+  
