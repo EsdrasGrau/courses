@@ -319,4 +319,19 @@ SELECT sector,
  -- What rows do you want to select?
   WHERE profits > pct80;
 
-  
+  -- add to excercise
+  -- To clear table if it already exists
+  DROP TABLE IF EXISTS startdates;
+
+  -- Create temp table syntax
+  CREATE TEMP TABLE startdates AS
+  -- Compute the minimum date for each what?
+  SELECT tag,
+         MIN(date) AS mindate
+    FROM stackoverflow
+   -- What do you need to compute the min date for each tag?
+   GROUP BY tag ;
+
+   -- Look at the table you created
+   SELECT *
+     FROM startdates;
