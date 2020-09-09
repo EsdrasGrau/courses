@@ -383,3 +383,115 @@ SELECT 'profits'::varchar AS measure,
        CORR(profits, profits_change) AS profits_change,
        CORR(profits, revenues_change) AS revenues_change
   FROM fortune500;
+
+
+
+  DROP TABLE IF EXISTS correlations;
+
+  CREATE TEMP TABLE correlations AS
+  SELECT 'profits'::varchar AS measure,
+         corr(profits, profits) AS profits,
+         corr(profits, profits_change) AS profits_change,
+         corr(profits, revenues_change) AS revenues_change
+    FROM fortune500;
+
+  -- Add a row for profits_change
+  -- Insert into what table?
+  INSERT INTO correlations
+  -- Follow the pattern of the select statement above
+  -- Using profits_change instead of profits
+  SELECT 'profits_change'::varchar AS measure,
+         CORR(profits_change, profits) AS profits,
+         CORR(profits_change, profits_change) AS profits_change,
+         CORR(profits_change, revenues_change) AS revenues_change
+    FROM fortune500;
+
+  -- Repeat the above, but for revenues_change
+  INSERT INTO correlations
+  SELECT 'revenues_change'::varchar AS measure,
+         CORR(revenues_change, profits) AS profits,
+         CORR(revenues_change, profits_change) AS profits_change,
+         CORR(revenues_change, revenues_change) AS revenues_change
+    FROM fortune500;
+
+
+
+--complete query
+DROP TABLE IF EXISTS correlations;
+
+CREATE TEMP TABLE correlations AS
+SELECT 'profits'::varchar AS measure,
+       corr(profits, profits) AS profits,
+       corr(profits, profits_change) AS profits_change,
+       corr(profits, revenues_change) AS revenues_change
+  FROM fortune500;
+
+INSERT INTO correlations
+SELECT 'profits_change'::varchar AS measure,
+       corr(profits_change, profits) AS profits,
+       corr(profits_change, profits_change) AS profits_change,
+       corr(profits_change, revenues_change) AS revenues_change
+  FROM fortune500;
+
+INSERT INTO correlations
+SELECT 'revenues_change'::varchar AS measure,
+       corr(revenues_change, profits) AS profits,
+       corr(revenues_change, profits_change) AS profits_change,
+       corr(revenues_change, revenues_change) AS revenues_change
+  FROM fortune500;
+
+-- Select each column, rounding the correlations
+SELECT measure,
+       ROUND(profits::numeric, 2) AS profits,
+       ROUND(profits_change::numeric, 2) AS profits_change,
+       ROUND(revenues_change::numeric, 2) AS revenues_change
+  FROM correlations;
+
+
+
+
+
+
+
+-- CHAPTER 3
+
+-- Select the count of each level of priority
+SELECT priority,
+  count(*)
+ FROM evanston311
+ GROUP BY priority;
+
+
+-- Find values of zip that appear in at least 100 rows
+-- Also get the count of each value
+SELECT ZIP, COUNT(*)
+  FROM evanston311
+ GROUP BY ZIP
+HAVING count(*) >=100;
+
+
+-- Find values of source that appear in at least 100 rows
+-- Also get the count of each value
+SELECT source, COUNT(*)
+  FROM evanston311
+ GROUP BY source
+HAVING count(*)>=100;
+
+
+-- Find the 5 most common values of street and the count of each
+SELECT street, COUNT(*)
+  FROM evanston311
+ GROUP BY street
+ ORDER BY COUNT(*) DESC
+ LIMIT 5;
+
+
+
+ SELECT distinct street,
+       -- Trim off unwanted characters from street
+       trim(street, '0123456789 #/.') AS cleaned_street
+  FROM evanston311
+ ORDER BY street;
+
+
+      
