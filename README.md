@@ -1,4 +1,4 @@
-# Continuous Education
+# Continuous Education (Self-Learning)
 
 ## Overview
 
