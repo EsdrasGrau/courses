@@ -540,4 +540,34 @@ SELECT COUNT(*)
     --- order by most frequent values
     ORDER BY COUNT(*) DESC
     LIMIT 10;
-break
+
+
+
+
+-- Concatenate house_num, a space, and street
+-- and trim spaces from the start of the result
+SELECT ltrim(concat(house_num,' ',street)) AS address
+  FROM evanston311;
+
+
+
+  -- Select the first word of the street value
+  SELECT split_part(street,' ',1) AS street_name,
+         count(*)
+    FROM evanston311
+   GROUP BY street_name
+   ORDER BY count DESC
+   LIMIT 20;
+
+
+
+   -- Select the first 50 chars when length is greater than 50
+   SELECT CASE WHEN length(description) > 50
+               THEN left(description, 50) || '...'
+          -- otherwise just select description
+          ELSE description
+          END
+     FROM evanston311
+    -- limit to descriptions that start with the word I
+    WHERE description LIKE 'I %'
+    ORDER BY description;
