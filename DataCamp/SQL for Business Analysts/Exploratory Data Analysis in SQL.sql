@@ -737,4 +737,54 @@ SELECT priority,
        -- Joining condition
        ON evanston311.id=indicators.id
  -- What are you grouping by?
- GROUP BY priority;   
+ GROUP BY priority;
+
+
+
+-- CHAPTER 4
+
+
+-- Count requests created on January 31, 2017
+SELECT count(*)
+  FROM evanston311
+ WHERE date_created::date = '2017-01-31';
+
+
+ -- Count requests created on February 29, 2016
+ SELECT count(*)
+   FROM evanston311
+  WHERE date_created::date >= '2016-02-29'
+    AND date_created::date < '2016-03-01';
+
+
+
+    -- Count requests created on March 13, 2017
+    SELECT count(*)
+      FROM evanston311
+     WHERE date_created::date >= '2017-03-13'
+       AND date_created::date < '2017-03-13'::date + '1 day'::interval;
+break
+
+
+
+-- Subtract the min date_created from the max
+SELECT MAX(date_created) - MIN(date_created)
+  FROM evanston311;
+
+
+
+  -- How old is the most recent request?
+  SELECT now() - MAX(date_created)
+    FROM evanston311;
+
+
+    -- Add 100 days to the current timestamp
+    SELECT now() + '100 days'::interval;
+
+
+    -- Select the current timestamp,
+    -- and the current timestamp + 5 minutes
+    SELECT now(), now() + '5 minutes'::interval;
+
+
+    
