@@ -787,4 +787,49 @@ SELECT MAX(date_created) - MIN(date_created)
     SELECT now(), now() + '5 minutes'::interval;
 
 
-    
+
+break
+
+-- Select the category and the average completion time by category
+SELECT category,
+       AVG(date_completed - date_created) AS completion_time
+  FROM evanston311
+ ___
+-- Order the results
+GROUP BY category
+ORDER BY completion_time DESC;
+
+
+-- Extract the month from date_created and count requests
+SELECT date_part('month',date_created) AS month,
+       COUNT(ID)
+  FROM evanston311
+ -- Limit the date range
+ WHERE date_created >='2016-01-01'
+   AND date_created < '2018-01-01'
+ -- Group by what to get monthly counts?
+ GROUP BY month;
+
+
+
+ -- Get the hour and count requests
+ SELECT date_part('hour', date_created) AS hour,
+        count(*)
+   FROM evanston311
+  GROUP BY hour
+  -- Order results to select most common
+  ORDER BY count DESC
+  LIMIT 1;
+
+
+
+
+  -- Count requests completed by hour
+  SELECT date_part('hour', date_completed) AS hour,
+         count(*)
+    FROM evanston311
+   GROUP BY hour
+   ORDER BY hour;
+
+
+ 
