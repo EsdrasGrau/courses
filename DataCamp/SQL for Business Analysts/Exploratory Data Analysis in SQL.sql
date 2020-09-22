@@ -832,4 +832,31 @@ SELECT date_part('month',date_created) AS month,
    ORDER BY hour;
 
 
- 
+   -- Select name of the day of the week the request was created
+   SELECT to_char(date_created, 'day') AS day,
+          -- Select avg time between request creation and completion
+          AVG(date_completed - date_created) AS duration
+     FROM evanston311
+    -- Group by the name of the day of the week and
+    -- integer value of day of week the request was created
+    GROUP BY day, EXTRACT(DOW FROM date_created)
+    -- Order by integer value of the day of the week
+    -- the request was created
+    ORDER BY EXTRACT(DOW FROM date_created);
+
+
+
+    -- Aggregate daily counts by month
+    SELECT date_trunc('month',day) AS month,
+           AVG(count)
+      -- Subquery to compute daily counts
+      FROM (SELECT date_trunc('day', date_created) AS day,
+                   count(*) AS count
+              FROM evanston311
+             GROUP BY day) AS daily_count
+     GROUP BY month
+     ORDER BY month;
+
+
+
+     
