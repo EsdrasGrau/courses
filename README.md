@@ -25,6 +25,7 @@ This repository contains exercises and answers to the different courses I have b
     - TV, Halftime Shows, and the Big Game
 - [Hackerrank](https://www.hackerrank.com/)
   - SQL
+  - Regex
 - [SQLZoo](https://sqlzoo.net/)
   - Musicians
 
