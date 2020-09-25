@@ -859,4 +859,49 @@ SELECT date_part('month',date_created) AS month,
 
 
 
-     
+
+     SELECT day
+     -- 1) Subquery to generate all dates
+     -- from min to max date_created
+       FROM (SELECT generate_series(MIN(date_created),
+                                    MAX(date_created),
+                                    '1 day')::date AS day
+               -- What table is date_created in?
+               FROM evanston311) AS all_dates
+     -- 4) Select dates (day from above) that are NOT IN the subquery
+      WHERE day NOT IN
+            -- 2) Subquery to select all date_created values as dates
+            (SELECT date_created::date
+               FROM evanston311);
+
+
+
+
+-- Generate 6 month bins covering 2016-01-01 to 2018-06-30
+
+-- Create lower bounds of bins
+SELECT generate_series('2016-01-01',  -- First bin lower value
+                       '2018-01-01',  -- Last bin lower value
+                       '6 months'::interval) AS lower,
+-- Create upper bounds of bins
+       generate_series('2016-07-01',  -- First bin upper value
+                       '2018-07-01',  -- Last bin upper value
+                       '6 months'::interval) AS upper;
+
+
+
+
+
+-- Count number of requests made per day
+SELECT day, COUNT(date_created) AS count
+-- Use a daily series from 2016-01-01 to 2018-06-30
+-- to include days with no requests
+  FROM (SELECT generate_series('2016-01-01',  -- series start date
+                               '2018-06-30',  -- series end date
+                               '1 day'::interval)::date AS day) AS daily_series
+       LEFT JOIN evanston311
+       -- match day from above (which is a date) to date_created
+       ON day = date_created::date
+ GROUP BY day;
+
+b
