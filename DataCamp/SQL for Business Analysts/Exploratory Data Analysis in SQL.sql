@@ -904,4 +904,66 @@ SELECT day, COUNT(date_created) AS count
        ON day = date_created::date
  GROUP BY day;
 
-b
+
+
+
+
+
+
+ -- Bins from Step 1
+ WITH bins AS (
+ 	 SELECT generate_series('2016-01-01',
+                             '2018-01-01',
+                             '6 months'::interval) AS lower,
+             generate_series('2016-07-01',
+                             '2018-07-01',
+                             '6 months'::interval) AS upper),
+ -- Daily counts from Step 2
+      daily_counts AS (
+      SELECT day, count(date_created) AS count
+        FROM (SELECT generate_series('2016-01-01',
+                                     '2018-06-30',
+                                     '1 day'::interval)::date AS day) AS daily_series
+             LEFT JOIN evanston311
+             ON day = date_created::date
+       GROUP BY day)
+ -- Select bin bounds
+ SELECT lower,
+        upper,
+        -- Compute median of count for each bin
+        percentile_disc(0.5) WITHIN GROUP (ORDER BY lower) AS median
+   -- Join bins and daily_counts
+   FROM bins
+        LEFT JOIN daily_counts
+        -- Where the day is between the bin bounds
+        ON day >= lower
+           AND day < upper
+  -- Group by bin bounds
+  GROUP BY lower, upper
+  ORDER BY lower;
+
+
+
+
+
+  -- generate series with all days from 2016-01-01 to 2018-06-30
+  WITH all_days AS
+       (SELECT generate_series('2016-01-01',
+                               '2018-06-30',
+                               '1 day'::interval) AS date),
+       -- Subquery to compute daily counts
+       daily_count AS
+       (SELECT date_trunc('day', date_created) AS day,
+               count(*) AS count
+          FROM evanston311
+         GROUP BY day)
+  -- Aggregate daily counts by month using date_trunc
+  SELECT date_trunc('month', date) AS month,
+         -- Use coalesce to replace NULL count values with 0
+         avg(coalesce(count, 0)) AS average
+    FROM all_days
+         LEFT JOIN daily_count
+         -- Joining condition
+         ON all_days.date=daily_count.day
+   GROUP BY month
+   ORDER BY month; 
