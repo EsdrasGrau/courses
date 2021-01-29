@@ -147,3 +147,86 @@ FROM Athletics_Gold
 ORDER BY Event ASC, Gender ASC, Year ASC;
 
 -- CHAPTER 2
+-- For each year, fetch the current gold medalist and the gold medalist
+-- 3 competitions ahead of the current row.
+
+WITH Discus_Medalists AS (
+  SELECT DISTINCT
+    Year,
+    Athlete
+  FROM Summer_Medals
+  WHERE Medal = 'Gold'
+    AND Event = 'Discus Throw'
+    AND Gender = 'Women'
+    AND Year >= 2000)
+
+SELECT
+  -- For each year, fetch the current and future medalists
+  year,
+  Athlete,
+  LEAD (Athlete,3) OVER (ORDER BY Year ASC) AS Future_Champion
+FROM Discus_Medalists
+ORDER BY Year ASC;
+
+-- Return all athletes and the first athlete ordered by alphabetical order.
+
+WITH All_Male_Medalists AS (
+  SELECT DISTINCT
+    Athlete
+  FROM Summer_Medals
+  WHERE Medal = 'Gold'
+    AND Gender = 'Men')
+
+SELECT
+  -- Fetch all athletes and the first althete alphabetically
+  Athlete,
+  FIRST_VALUE(Athlete) OVER (
+    ORDER BY Athlete ASC
+  ) AS First_Athlete
+FROM All_Male_Medalists;
+
+-- Return the year and the city in which each Olympic games were held.
+-- Fetch the last city in which the Olympic games were held.
+
+WITH Hosts AS (
+  SELECT DISTINCT Year, City
+    FROM Summer_Medals)
+
+SELECT
+  Year,
+  City,
+  -- Get the last city in which the Olympic games were held
+  LAST_VALUE(City) OVER (
+   ORDER BY Year ASC
+   RANGE BETWEEN
+     UNBOUNDED PRECEDING AND
+     UNBOUNDED FOLLOWING
+  ) AS Last_City
+FROM Hosts
+ORDER BY Year ASC;
+
+
+/* In chapter 1, you used ROW_NUMBER to rank athletes by awarded medals.
+However, ROW_NUMBER assigns different numbers to athletes with the same count of
+awarded medals, so it's not a useful ranking function; if two athletes earned the
+same number of medals, they should have the same rank. */
+
+-- Rank each athlete by the number of medals they've earned -- the higher the count,
+-- the higher the rank -- with identical numbers in case of identical values.
+
+-- First you get the general table without ranking with a cte then the ranking
+
+WITH Athlete_Medals AS (
+  SELECT
+    Athlete,
+    COUNT(*) AS Medals
+  FROM Summer_Medals
+  GROUP BY Athlete)
+
+SELECT
+  Athlete,
+  Medals,
+  -- Rank athletes by the medals they've won
+  RANK() OVER (ORDER BY Medals DESC) AS Rank_N
+FROM Athlete_Medals
+ORDER BY Medals DESC;
