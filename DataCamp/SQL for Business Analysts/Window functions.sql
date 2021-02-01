@@ -417,3 +417,52 @@ SELECT
             AND CURRENT ROW) AS Max_Medals
 FROM Chinese_Medals
 ORDER BY Athlete ASC;
+
+
+-- Moving average of Russian medals
+-- Calculate the 3-year moving average of medals earned.
+
+WITH Russian_Medals AS (
+  SELECT
+    Year, COUNT(*) AS Medals
+  FROM Summer_Medals
+  WHERE
+    Country = 'RUS'
+    AND Medal = 'Gold'
+    AND Year >= 1980
+  GROUP BY Year)
+
+SELECT
+  Year, Medals,
+  --- Calculate the 3-year moving average of medals earned
+  AVG(Medals) OVER
+    (ORDER BY Year ASC
+     ROWS BETWEEN
+     2 PRECEDING AND CURRENT ROW) AS Medals_MA
+FROM Russian_Medals
+ORDER BY Year ASC;
+
+-- What if your data is split into multiple groups spread over one or more columns
+-- in the table? Even with a defined frame, if you can't somehow separate the groups'
+-- data, one group's values will affect the average of another group's values.
+
+-- Calculate the 3-year moving sum of medals earned per country.
+
+WITH Country_Medals AS (
+  SELECT
+    Year, Country, COUNT(*) AS Medals
+  FROM Summer_Medals
+  GROUP BY Year, Country)
+
+SELECT
+  Year, Country, Medals,
+  -- Calculate each country's 3-game moving total
+  SUM(Medals) OVER
+    (PARTITION BY Country
+     ORDER BY Year ASC
+     ROWS BETWEEN
+     2 PRECEDING AND CURRENT ROW) AS Medals_MA
+FROM Country_Medals
+ORDER BY Country ASC, Year ASC;
+
+-- CHAPTER 4
