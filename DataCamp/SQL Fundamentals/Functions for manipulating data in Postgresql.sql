@@ -321,3 +321,116 @@ FROM
   	ON f.film_id = fc.film_id
   INNER JOIN category AS c
   	ON fc.category_id = c.category_id;
+
+-- CHAPTER 4
+-- 1 OF 3
+-- Select all columns for all records that begin with the word GOLD.
+-- Select all columns
+SELECT *
+FROM film
+-- Select only records that begin with the word 'GOLD'
+WHERE title LIKE 'GOLD%';
+
+-- 1 OF 2
+-- Now select all records that end with the word GOLD.
+SELECT *
+FROM film
+-- Select only records that end with the word 'GOLD'
+WHERE title LIKE '%GOLD';
+
+-- 3 OF 3
+-- All records
+SELECT *
+FROM film
+-- Select only records that contain the word 'GOLD'
+WHERE title LIKE '%GOLD%';
+
+-- Select the film description and convert it to a tsvector data type.
+-- Select the film description as a tsvector
+SELECT to_tsvector(description)
+FROM film;
+
+-- Select the title and description columns from the film table.
+-- Perform a full-text search on the title column for the word elf.
+-- Select the title and description
+SELECT title, description
+FROM film
+-- Convert the title to a tsvector and match it against the tsquery
+WHERE to_tsvector(title) @@ to_tsquery('elf');
+
+-- 1 of 2
+-- Create a new enumerated data type called compass_position.
+-- Use the four positions of a compass as the values.
+-- Create an enumerated data type, compass_position
+CREATE TYPE compass_position AS ENUM (
+  	-- Use the four cardinal directions
+  	'North',
+  	'South',
+  	'West',
+  	'East'
+);
+
+-- Verify that the new data type has been created by looking in the pg_type system table.
+-- Create an enumerated data type, compass_position
+CREATE TYPE compass_position AS ENUM (
+  	-- Use the four cardinal directions
+  	'North',
+  	'South',
+  	'East',
+  	'West'
+);
+-- Confirm the new data type is in the pg_type system table
+SELECT typname
+FROM pg_type
+WHERE typname='compass_position';
+
+-- 1 of 2
+-- Select the column_name, data_type, udt_name.
+-- Filter for the rating column in the film table.
+-- Select the column name, data type and udt name columns
+SELECT column_name, data_type, udt_name
+FROM INFORMATION_SCHEMA.COLUMNS
+-- Filter by the rating column in the film table
+WHERE table_name ='film' AND column_name='rating';
+
+-- 2 of 2
+-- Select all columns from the pg_type table where the type name is equal to mpaa_rating.
+SELECT *
+FROM pg_type
+WHERE typname='mpaa_rating'
+
+-- 1 of 3
+-- Select the title and inventory_id columns from the film and inventory tables in the database.
+-- Select the film title and inventory ids
+SELECT
+	f.title,
+    i.inventory_id
+FROM film AS f
+	-- Join the film table to the inventory table
+	INNER JOIN inventory AS i ON f.film_id=i.film_id
+
+-- 2 of 3
+-- inventory_id is currently held by a customer and alias the column as held_by_cust
+-- Select the film title, rental and inventory ids
+SELECT
+	f.title,
+    i.inventory_id,
+    -- Determine whether the inventory is held by a customer
+    inventory_held_by_customer(i.inventory_id) AS held_by_cust
+FROM film as f
+	-- Join the film table to the inventory table
+	INNER JOIN inventory AS i ON f.film_id=i.film_id
+
+-- 3 of 3
+-- Now filter your query to only return records where the inventory_held_by_customer() function returns a non-null value.
+-- Select the film title and inventory ids
+SELECT
+	f.title,
+    i.inventory_id,
+    -- Determine whether the inventory is held by a customer
+    inventory_held_by_customer(i.inventory_id) as held_by_cust
+FROM film as f
+	INNER JOIN inventory AS i ON f.film_id=i.film_id
+WHERE
+	-- Only include results where the held_by_cust is not null
+    inventory_held_by_customer(i.inventory_id) IS NOT NULL
