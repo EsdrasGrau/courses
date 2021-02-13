@@ -485,7 +485,7 @@ WHERE
 
 -- 2 of 2
 SELECT
-  title, 
+  title,
   description,
   -- Calculate the similarity
   similarity(description, 'Astounding Drama')
