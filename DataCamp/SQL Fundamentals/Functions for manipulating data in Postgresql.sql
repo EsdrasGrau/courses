@@ -434,3 +434,65 @@ FROM film as f
 WHERE
 	-- Only include results where the held_by_cust is not null
     inventory_held_by_customer(i.inventory_id) IS NOT NULL
+
+-- 1 of 2
+-- Enable the pg_trgm extension
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
+-- 2 OF 2
+-- Enable the pg_trgm extension
+-- Select all rows extensions
+SELECT *
+FROM PG_EXTENSION;
+
+-- Select the film title and description.
+-- Calculate the similarity between the title and description.
+-- Select the title and description columns
+SELECT
+  title,
+  description,
+  -- Calculate the similarity
+  similarity(title, description)
+FROM
+  film
+
+-- Select the film title and film description.
+-- Calculate the levenshtein distance for the film title with the string JET NEIGHBOR.
+-- Select the title and description columns
+SELECT
+  title,
+  description,
+  -- Calculate the levenshtein distance
+  levenshtein(title, 'JET NEIGHBOR') AS distance
+FROM
+  film
+ORDER BY 3
+
+-- 1 OF 2
+-- Select the title and description for all DVDs from the film table.
+-- Perform a full-text search by converting the description to a tsvector and
+-- match it to the phrase 'Astounding & Drama' using a tsquery in the WHERE clause.
+-- Select the title and description columns
+SELECT
+  title,
+  description
+FROM
+  film
+WHERE
+  -- Match "Astounding Drama" in the description
+  to_tsvector(description) @@
+  to_tsquery('Astounding & Drama');
+
+-- 2 of 2
+SELECT
+  title, 
+  description,
+  -- Calculate the similarity
+  similarity(description, 'Astounding Drama')
+FROM
+  film
+WHERE
+  to_tsvector(description) @@
+  to_tsquery('Astounding & Drama')
+ORDER BY
+	similarity(description, 'Astounding Drama') DESC;
