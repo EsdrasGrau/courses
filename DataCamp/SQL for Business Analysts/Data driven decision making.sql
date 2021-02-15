@@ -17,3 +17,13 @@ HAVING COUNT(*) > 7 -- Select only customers with more than 7 movie rentals
 ORDER BY 2 ASC; -- Order by the average rating in ascending order
 
 
+SELECT 
+	SUM(m.renting_price), 
+	COUNT(*), 
+	COUNT(DISTINCT r.customer_id)
+FROM renting AS r
+LEFT JOIN movies AS m
+ON r.movie_id = m.movie_id
+-- Only look at movie rentals in 2018
+WHERE date_renting BETWEEN '2018-01-01' AND '2018-12-31' ;
+
