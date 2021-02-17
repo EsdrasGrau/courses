@@ -103,3 +103,56 @@ ON m.movie_id = r.movie_id
 WHERE date_renting >= '2019-01-01'
 GROUP BY 1;
 
+
+
+-- CHAPTER 3
+-- 1 OF 2
+-- Select all movie IDs which have more than 5 views.
+SELECT movie_id -- Select movie IDs with more than 5 views
+FROM renting
+GROUP BY movie_id
+HAVING COUNT(*) > 5
+
+-- 2 OF 2
+-- Select all information about movies with more than 5 views.
+SELECT *
+FROM movies
+WHERE movie_id IN  -- Select movie IDs from the inner query
+	(SELECT movie_id
+	FROM renting
+	GROUP BY movie_id
+	HAVING COUNT(*) > 5)
+
+SELECT *
+FROM customers
+WHERE customer_id IN            -- Select all customers with more than 10 movie rentals
+	(SELECT customer_id
+	FROM renting
+	GROUP BY customer_id
+	HAVING COUNT(*)>10);
+
+-- For the advertising campaign your manager also needs a list of popular movies with high ratings. Report a list of movies with rating above average.
+SELECT title -- Report the movie titles of all movies with average rating higher than the total average
+FROM movies
+WHERE movie_id IN
+	(SELECT movie_id
+	 FROM renting
+     GROUP BY movie_id
+     HAVING AVG(rating) > 
+		(SELECT AVG(rating)
+		 FROM renting));
+
+SELECT *
+FROM customers as c
+WHERE 5 > 
+	(SELECT count(*)
+	FROM renting as r
+	WHERE r.customer_id = c.customer_id);
+
+
+SELECT *
+FROM customers AS c
+WHERE 4 > -- Select all customers with a minimum rating smaller than 4 
+	(SELECT MIN(rating)
+	FROM renting AS r
+	WHERE r.customer_id = c.customer_id);
