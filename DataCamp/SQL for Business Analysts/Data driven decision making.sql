@@ -156,3 +156,69 @@ WHERE 4 > -- Select all customers with a minimum rating smaller than 4
 	(SELECT MIN(rating)
 	FROM renting AS r
 	WHERE r.customer_id = c.customer_id);
+
+
+SELECT *
+FROM customers AS c -- Select all customers with at least one rating
+WHERE EXISTS
+	(SELECT *
+	FROM renting AS r
+	WHERE rating IS NOT NULL 
+	AND r.customer_id = c.customer_id);
+
+
+SELECT a.nationality, count(*) -- Report the nationality and the number of actors for each nationality
+FROM actors AS a
+WHERE EXISTS
+	(SELECT ai.actor_id
+	 FROM actsin AS ai
+	 LEFT JOIN movies AS m
+	 ON m.movie_id = ai.movie_id
+	 WHERE m.genre = 'Comedy'
+	 AND ai.actor_id = a.actor_id)
+group by a.nationality;
+
+SELECT name, 
+       nationality, 
+       year_of_birth
+FROM actors
+WHERE nationality <> 'USA'
+INTERSECT -- Select all actors who are not from the USA and who are also born after 1990
+SELECT name, 
+       nationality, 
+       year_of_birth
+FROM actors
+WHERE year_of_birth > 1990;
+
+SELECT name, 
+       nationality, 
+       year_of_birth
+FROM actors
+WHERE nationality <> 'USA'
+UNION -- Select all actors who are not from the USA and  born after 1990
+SELECT name, 
+       nationality, 
+       year_of_birth
+FROM actors
+WHERE year_of_birth > 1990;
+
+
+-- CHAPTER 3
+
+SELECT country, -- Extract information of a pivot table of gender and country for the number of customers
+	   gender,
+	   COUNT(*)
+FROM customers
+GROUP BY CUBE (country, gender)
+ORDER BY country;
+
+SELECT 
+	c.country, 
+	m.genre, 
+	AVG(r.rating) AS avg_rating -- Calculate the average rating 
+FROM renting AS r
+LEFT JOIN movies AS m
+ON m.movie_id = r.movie_id
+LEFT JOIN customers AS c
+ON r.customer_id = c.customer_id
+GROUP BY CUBE (c.country, m.genre); -- For all aggregation levels of country and genre
