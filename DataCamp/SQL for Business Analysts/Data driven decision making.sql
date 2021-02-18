@@ -223,3 +223,58 @@ LEFT JOIN customers AS c
 ON r.customer_id = c.customer_id
 GROUP BY CUBE (c.country, m.genre); -- For all aggregation levels of country and genre
 
+-- Count the total number of customers, the number of customers for each country, and the number of female and male customers for each country
+SELECT country,
+       gender,
+	   COUNT(*)
+FROM customers
+GROUP BY ROLLUP (country, gender)
+ORDER BY country, gender; -- Order the result by country and gender
+
+-- Group by each county and genre with OLAP extension
+SELECT 
+	c.country, 
+	m.genre, 
+	AVG(r.rating) AS avg_rating, 
+	COUNT(*) AS num_rating
+FROM renting AS r
+LEFT JOIN movies AS m
+ON m.movie_id = r.movie_id
+LEFT JOIN customers AS c
+ON r.customer_id = c.customer_id
+GROUP BY ROLLUP (c.country, m.genre)
+ORDER BY c.country, m.genre;
+
+SELECT 
+	nationality, -- Select nationality of the actors
+    gender, -- Select gender of the actors
+    COUNT(*) -- Count the number of actors
+FROM actors
+GROUP BY GROUPING SETS ((nationality), (gender), ()); -- Use the correct GROUPING SETS operation
+
+SELECT 
+	c.country, 
+    c.gender,
+	AVG(r.rating)
+FROM renting AS r
+LEFT JOIN customers AS c
+ON r.customer_id = c.customer_id
+-- Report all info from a Pivot table for country and gender
+GROUP BY GROUPING SETS ((country, gender), (country),(gender),());
+
+SELECT genre,
+	   AVG(rating) AS avg_rating,
+	   COUNT(rating) AS n_rating,
+       COUNT(*) AS n_rentals,     
+	   COUNT(DISTINCT m.movie_id) AS n_movies 
+FROM renting AS r
+LEFT JOIN movies AS m
+ON m.movie_id = r.movie_id
+WHERE r.movie_id IN ( 
+	SELECT movie_id
+	FROM renting
+	GROUP BY movie_id
+	HAVING COUNT(rating) >= 3 )
+AND r.date_renting >= '2018-01-01'
+GROUP BY genre
+ORDER BY avg_rating DESC; -- Order the table by decreasing average rating
