@@ -222,3 +222,4 @@ ON m.movie_id = r.movie_id
 LEFT JOIN customers AS c
 ON r.customer_id = c.customer_id
 GROUP BY CUBE (c.country, m.genre); -- For all aggregation levels of country and genre
+
