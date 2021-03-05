@@ -367,4 +367,25 @@ ORDER BY previous.delivr_month ASC;
 
 
 -- 3RD CHAPTER
+-- Return a table of user IDs and the revenue each user generated.
+-- 1 of 2
+SELECT
+  -- Select the user ID and calculate revenue
+  user_id,
+  SUM(meal_price * order_quantity) AS revenue
+FROM meals AS m
+JOIN orders AS o ON m.meal_id = o.meal_id
+GROUP BY user_id;
 
+-- Create a CTE named kpi
+WITH kpi AS (
+  SELECT
+    -- Select the user ID and calculate revenue
+    user_id,
+    SUM(m.meal_price * o.order_quantity) AS revenue
+  FROM meals AS m
+  JOIN orders AS o ON m.meal_id = o.meal_id
+  GROUP BY user_id)
+-- Calculate ARPU
+SELECT ROUND(AVG(revenue) :: numeric, 2) AS arpu
+FROM kpi;
