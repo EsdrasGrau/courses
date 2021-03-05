@@ -389,3 +389,82 @@ WITH kpi AS (
 -- Calculate ARPU
 SELECT ROUND(AVG(revenue) :: numeric, 2) AS arpu
 FROM kpi;
+
+/*
+Store revenue and the number of unique active users by week in the kpi CTE.
+Calculate ARPU by dividing the revenue by the number of users.
+Order the results by week in ascending order.
+*/
+WITH kpi AS (
+  SELECT
+    -- Select the week, revenue, and count of users
+    DATE_TRUNC('week', order_date) :: DATE AS delivr_week,
+    SUM(meal_price * order_quantity) AS revenue,
+    COUNT(DISTINCT user_id) AS users
+  FROM meals AS m
+  JOIN orders AS o ON m.meal_id = o.meal_id
+  GROUP BY delivr_week)
+
+SELECT
+  delivr_week,
+  -- Calculate ARPU
+  ROUND(
+    revenue :: NUMERIC / GREATEST(users, 1),
+  2) AS arpu
+FROM kpi
+-- Order by week in ascending order
+ORDER BY delivr_week ASC;
+
+-- Store the count of distinct orders and distinct users in the kpi CTE.
+-- Calculate the average orders per user.
+WITH kpi AS (
+  SELECT
+    -- Select the count of orders and users
+    COUNT(DISTINCT order_id) AS orders,
+    COUNT(DISTINCT user_id) AS users
+  FROM orders)
+
+SELECT
+  -- Calculate the average orders per user
+  ROUND(
+    orders :: NUMERIC / users,
+  2) AS arpu
+FROM kpi;
+
+-- Store each user ID and the revenue Delivr generates from it in the user_revenues CTE.
+-- Return a frequency table of revenues rounded to the nearest hundred and the users generating those revenues.
+WITH user_revenues AS (
+  SELECT
+    -- Select the user ID and revenue
+    user_id,
+    SUM(meal_price * order_quantity) AS revenue
+  FROM meals AS m
+  JOIN orders AS o ON m.meal_id = o.meal_id
+  GROUP BY user_id)
+
+SELECT
+  -- Return the frequency table of revenues by user
+  ROUND(revenue :: NUMERIC, -2) AS revenue_100,
+  COUNT(DISTINCT user_id) AS users
+FROM user_revenues
+GROUP BY revenue_100
+ORDER BY revenue_100 ASC;
+
+
+
+
+
+WITH user_orders AS (
+  SELECT
+    user_id,
+    COUNT(DISTINCT order_id) AS orders
+  FROM orders
+  GROUP BY user_id)
+
+SELECT
+  -- Return the frequency table of orders by user
+  orders,
+  COUNT(DISTINCT user_id) AS users
+FROM user_orders
+GROUP BY orders
+ORDER BY orders ASC;
